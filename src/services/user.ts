@@ -69,6 +69,7 @@ export class UserService {
 
     public static async getAllUsers(payload: any) {
         const { search, filters, skip, sortBy, sort, fields, take, where } = payload;
+        const { firstName } = where;
         console.log(search)
         try {
             var pair = {};
@@ -82,6 +83,26 @@ export class UserService {
                             mode: "insensitive", // Default value: default
                         }
                     },
+                    {
+                        firstName: {
+                            startsWith: `%${search ? search : "%"}%`,
+                            mode: "insensitive", // Default value: default
+                        }
+                    },
+
+                    {
+                        lastName: {
+                            startsWith: `%${search ? search : "%"}%`,
+                            mode: "insensitive", // Default value: default
+                        }
+                    },
+                    {
+                        id: {
+                            startsWith: `%${search ? search : "%"}%`,
+                            mode: "insensitive", // Default value: default
+                        }
+                    },
+
                 ],
             }
             let query = {
@@ -91,8 +112,9 @@ export class UserService {
 
                 orderBy: [pair],
                 select: fields ? JSON.parse(fields) : undefined,
-            };
+            }
 
+            
             if (filters) {
                 const parsedFilters = JSON.parse(filters);
                 query.where = { ...query.where, ...parsedFilters };
