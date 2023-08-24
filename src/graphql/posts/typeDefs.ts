@@ -5,4 +5,11 @@ type Post {
     body:String!
     userId:String!
 }
+
+input PostUpdateManyInput {
+    title: String,
+    body: String,
+    titleId:String    
+}
+
 `;

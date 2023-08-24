@@ -27,8 +27,12 @@ const mutations = {
         const res = await PostService.deletePost(payload)
         return res
     },
-};
+    updateManyPost: async (_: any, payload: { titleId: string, title: string, body: string }) => {
+        const res = await PostService.updateManyPost(payload)
+        return res
+    }
 
+};
 
 export const resolvers = {
     queries, mutations

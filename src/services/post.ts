@@ -56,4 +56,20 @@ export class PostService {
         console.log(deletedPost, "deletedPost");
         return deletedPost;
     }
+
+    public static async updateManyPost(payload: { titleId: string, title: string, body: string }) {
+        const { title, body, titleId } = payload;
+        try {
+            const updatedPosts = await prismaClient.post.updateMany({
+                where: { title: titleId },
+                data: {
+                    body
+                },
+            });
+            return updatedPosts.count;
+        } catch (error) {
+            return error
+        }
+
+    }
 }

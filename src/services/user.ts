@@ -67,25 +67,62 @@ export class UserService {
 
     }
 
-    public static async getAllUsers() {
-        const res = await prismaClient.user.findMany({
-            select: {
-                email: true,
-                id: true,
-                profileImage: true,
-                lastName: true,
-                firstName: true,
-                posts: {
-                  select: {
-                    title: true,
-                    body:true,
-                    id:true,
-                    userId:true
-                  },
-                },
-              },
-        });
-        return res
+    public static async getAllUsers(payload: any) {
+        const { search, filters, skip, sortBy, sort, fields, take, where } = payload;
+        console.log(search)
+        try {
+            var pair = {};
+            //@ts-ignore
+            pair[sortBy] = sort;
+            let where = {
+                OR: [
+                    {
+                        email: {
+                            startsWith: `%${search ? search : "%"}%`,
+                            mode: "insensitive", // Default value: default
+                        }
+                    },
+                ],
+            }
+            let query = {
+                where: where,
+                skip: skip ? (skip - 1) * take : undefined,
+                take: take ? parseInt(take) : undefined,
+
+                orderBy: [pair],
+                select: fields ? JSON.parse(fields) : undefined,
+            };
+
+            if (filters) {
+                const parsedFilters = JSON.parse(filters);
+                query.where = { ...query.where, ...parsedFilters };
+            }
+            console.log(query, "query")
+            const res = await prismaClient.user.findMany(
+                //@ts-ignore
+                query,
+                // select: {
+                //     email: true,
+                //     id: true,
+                //     profileImage: true,
+                //     lastName: true,
+                //     firstName: true,
+                //     posts: {
+                //         select: {
+                //             title: true,
+                //             body: true,
+                //             id: true,
+                //             userId: true
+                //         },
+                //     },
+                // },
+            );
+            return res
+        } catch (error) {
+            console.log(error, "error")
+            return error
+        }
+
     }
 
     public static async login(payload: ILogin) {

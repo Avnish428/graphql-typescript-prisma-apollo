@@ -17,8 +17,9 @@ const queries = {
         }
         throw new Error("access denied")
     },
-    getAllUsers: async (): Promise<any> => {
-        const res = await UserService.getAllUsers();
+    getAllUsers: async (_: any, payload: any): Promise<any> => {
+        console.log(payload, "getlalusers payload");
+        const res = await UserService.getAllUsers(payload);
         return res;
     },
     getUserById: async (_: any, payload: { id: string }) => {

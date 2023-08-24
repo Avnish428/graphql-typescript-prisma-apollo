@@ -11,7 +11,8 @@
   },
   "scripts": {
     "start": "nodemon node build/index.js",
-    "dev": "tsc-watch"
+    "dev": "tsc-watch",
+    "migrate-up": "npx prisma migrate dev "
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.2",
